@@ -10,7 +10,7 @@ class PixelAdventure extends FlameGame {
   Color backgroundColor() => const Color(0xFF211F30); // Set the background color of the game
   late final CameraComponent cam;
 
-  final world = Level(levelName: 'Level-03'); // Create an instance of Level
+  final world = Level(levelName: 'Level-04'); // Create an instance of Level
 
   @override
   FutureOr<void> onLoad() async {
