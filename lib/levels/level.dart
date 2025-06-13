@@ -5,12 +5,15 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:pixel_adventure_game/actors/player.dart';
 
 class Level extends World {
-  late TiledComponent level;
+  final String levelName;
+  Level({required this.levelName});
+
+  late TiledComponent level; // Tiled component to hold the loaded map
 
   @override
   FutureOr<void> onLoad() async {
     level = await TiledComponent.load(
-      'Level-01.tmx', // Path to the Tiled map file
+      '$levelName.tmx', // Path to the Tiled map file
       Vector2.all(16), // Tile size in pixels
     ); // Load the Tiled map
 
