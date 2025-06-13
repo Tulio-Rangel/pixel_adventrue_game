@@ -1,6 +1,6 @@
 name: pixel_adventure_game
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -19,3 +19,14 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/tiles/
+    - assets/images/Terrain/
+    - assets/images/Main Characters/
+    - assets/images/Main Characters/Mask Dude/
+    - assets/images/Main Characters/Ninja Frog/
+    - assets/images/Main Characters/Pink Man/
+    - assets/images/Main Characters/Virtual Guy/
+
+    # - assets/sounds/
+    # - assets/fonts/
