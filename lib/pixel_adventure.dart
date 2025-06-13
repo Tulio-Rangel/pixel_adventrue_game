@@ -13,7 +13,10 @@ class PixelAdventure extends FlameGame {
   final world = Level(); // Create an instance of Level
 
   @override
-  FutureOr<void> onLoad() {
+  FutureOr<void> onLoad() async {
+    await images
+        .loadAllImages(); // Load all images used in the game (into cache)
+
     cam = CameraComponent.withFixedResolution(
       world: world, // Use the world from the game
       width: 640,
