@@ -103,7 +103,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _updatePlayerMovement(double dt) {
     double dirX = 0.0;
-    switch (PlayerDirection) {
+    switch (playerDirection) {
       case PlayerDirection.left:
         if (isFacingRight) {
           // Flip the sprite if changing direction from right to left

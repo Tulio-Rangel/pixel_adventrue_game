@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -15,6 +14,7 @@ class PixelAdventure extends FlameGame
   late final CameraComponent cam;
   Player player = Player(character: 'Mask Dude');
   late JoystickComponent joystick;
+  bool showJoystick = true; // Flag to control joystick visibility
 
   @override
   FutureOr<void> onLoad() async {
@@ -34,14 +34,27 @@ class PixelAdventure extends FlameGame
     cam.viewfinder.anchor =
         Anchor.topLeft; // Set the camera's anchor to the top-left corner
 
+    // cam.viewfinder.zoom = 0.5; // Set the camera's zoom level
+
     addAll([cam, world]); // Add the camera and world to the game
 
-    addJoystick(); // Add a joystick for player control
+    if (showJoystick) {
+      addJoystick(); // Add a joystick for player control
+    }
+
     return super.onLoad();
   }
 
+  @override
+  void update(double dt) {
+    if (showJoystick) {
+      updateJoistick();
+    }
+    super.update(dt);
+  }
+
   void addJoystick() {
-    final joystick = JoystickComponent(
+    joystick = JoystickComponent(
       knob: SpriteComponent(
         sprite: Sprite(
           images.fromCache('HUD/Knob.png'), // Load the joystick knob sprite
@@ -61,5 +74,23 @@ class PixelAdventure extends FlameGame
     ); // Create a joystick component with a directional joystick
 
     add(joystick); // Add the joystick to the game
+  }
+
+  void updateJoistick() {
+    switch (joystick.direction) {
+      case JoystickDirection.left:
+      case JoystickDirection.upLeft:
+      case JoystickDirection.downLeft:
+        player.playerDirection = PlayerDirection.left;
+        break;
+      case JoystickDirection.right:
+      case JoystickDirection.upRight:
+      case JoystickDirection.downRight:
+        player.playerDirection = PlayerDirection.right;
+        break;
+      default:
+        player.playerDirection = PlayerDirection.none;
+        break;
+    }
   }
 }
