@@ -6,7 +6,8 @@ import 'package:pixel_adventure_game/actors/player.dart';
 
 class Level extends World {
   final String levelName;
-  Level({required this.levelName});
+  final Player player;
+  Level({required this.levelName, required this.player});
 
   late TiledComponent level; // Tiled component to hold the loaded map
 
@@ -26,13 +27,10 @@ class Level extends World {
     for (final spawnPoint in spawnPointsLayer!.objects) {
       switch (spawnPoint.class_) {
         case 'Player':
-          final player = Player(
-            character: 'Ninja Frog',
-            position: Vector2(
-              spawnPoint.x,
-              spawnPoint.y,
-            ), // Set the player's position based on the spawn point
-          );
+          player.position = Vector2(
+            spawnPoint.x,
+            spawnPoint.y,
+          ); // Set the player's position
           add(player); // Add the player character to the world
           break;
         default:
