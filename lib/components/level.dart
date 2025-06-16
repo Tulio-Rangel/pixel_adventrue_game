@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:pixel_adventure_game/components/collision_block.dart';
 import 'package:pixel_adventure_game/components/player.dart';
 
 class Level extends World {
@@ -10,6 +11,7 @@ class Level extends World {
   Level({required this.levelName, required this.player});
 
   late TiledComponent level; // Tiled component to hold the loaded map
+  List<CollisionBlock> collisionBlocks = []; // List to hold collision blocks
 
   @override
   FutureOr<void> onLoad() async {
@@ -24,16 +26,45 @@ class Level extends World {
       'Spawnpoints',
     ); // Get the spawn points layer from the Tiled map
 
-    for (final spawnPoint in spawnPointsLayer!.objects) {
-      switch (spawnPoint.class_) {
-        case 'Player':
-          player.position = Vector2(
-            spawnPoint.x,
-            spawnPoint.y,
-          ); // Set the player's position
-          add(player); // Add the player character to the world
-          break;
-        default:
+    if (spawnPointsLayer != null) {
+      for (final spawnPoint in spawnPointsLayer.objects) {
+        switch (spawnPoint.class_) {
+          case 'Player':
+            player.position = Vector2(
+              spawnPoint.x,
+              spawnPoint.y,
+            ); // Set the player's position
+            add(player); // Add the player character to the world
+            break;
+          default:
+        }
+      }
+    }
+
+    final collisionsLayer = level.tileMap.getLayer<ObjectGroup>(
+      'Collisions',
+    ); // Get the collisions layer from the Tiled map
+
+    if (collisionsLayer != null) {
+      for (final collision in collisionsLayer.objects) {
+        switch (collision.class_) {
+          case 'Platform':
+            final platform = CollisionBlock(
+              position: Vector2(collision.x, collision.y),
+              size: Vector2(collision.width, collision.height),
+              isPlatform: true, // Mark as a platform
+            );
+            collisionBlocks.add(platform); // Add to the collision blocks list
+            add(platform); // Add the platform to the world
+            break;
+          default:
+            final block = CollisionBlock(
+              position: Vector2(collision.x, collision.y),
+              size: Vector2(collision.width, collision.height),
+            ); // Create a collision block
+            collisionBlocks.add(block); // Add to the collision blocks list
+            add(block); // Add the block to the world
+        }
       }
     }
 
