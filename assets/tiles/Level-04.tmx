@@ -32,7 +32,7 @@
   <object id="1" x="32.7559" y="257.45"/>
   <object id="2" name="Player" type="Player" x="32" y="240" width="29.3079" height="29.3079"/>
  </objectgroup>
- <objectgroup id="3" name="Collitions">
+ <objectgroup id="3" name="Collisions">
   <object id="3" x="32" y="32"/>
   <object id="4" x="16" y="32" width="16" height="320"/>
   <object id="5" x="32" y="336"/>
