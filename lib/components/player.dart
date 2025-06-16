@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
+import 'package:pixel_adventure_game/components/collision_block.dart';
+import 'package:pixel_adventure_game/components/utils.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
 enum PlayerState {
@@ -24,10 +26,12 @@ class Player extends SpriteAnimationGroupComponent
   double horizontalMovement = 0; // Horizontal movement input
   double moveSpeed = 100; // Movement speed of the player in pixels per second
   Vector2 velocity = Vector2.zero(); // Current velocity of the player
+  List<CollisionBlock> collisionBlocks = []; // List of collision blocks
 
   @override
   FutureOr<void> onLoad() {
     _loadAllAnimations();
+    debugMode = true; // Enable debug mode for the player component
     return super.onLoad();
   }
 
@@ -35,6 +39,7 @@ class Player extends SpriteAnimationGroupComponent
   void update(double dt) {
     _updatePlayerState();
     _updatePlayerMovement(dt);
+    _checkHorizontalCollisions();
     super.update(dt);
   }
 
@@ -112,5 +117,26 @@ class Player extends SpriteAnimationGroupComponent
     }
 
     current = playerState; // Set the current animation state
+  }
+
+  void _checkHorizontalCollisions() {
+    for (final block in collisionBlocks) {
+      if (!block.isPlatform) {
+        if (checkCollision(this, block)) {
+          if (velocity.x > 0) {
+            velocity.x = 0; // Stop movement if colliding on the right
+            position.x =
+                block.x - width; // Move player to the left of the block
+          }
+          if (velocity.x < 0) {
+            velocity.x = 0; // Stop movement if colliding on the left
+            position.x =
+                block.x +
+                block.width +
+                width; // Move player to the right of the block
+          }
+        }
+      }
+    }
   }
 }
