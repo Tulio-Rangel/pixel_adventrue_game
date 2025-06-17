@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure_game/components/collision_block.dart';
+import 'package:pixel_adventure_game/components/player_hitbox.dart';
 import 'package:pixel_adventure_game/components/utils.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
@@ -36,12 +38,24 @@ class Player extends SpriteAnimationGroupComponent
   Vector2 velocity = Vector2.zero(); // Current velocity of the player
   bool isOnGround = false; // Flag to check if the player is on the ground
   bool hasJumped = false; // Flag to check if the player has jumped
-  List<CollisionBlock> collisionBlocks = []; // List of collision blocks
+  List<CollisionBlock> collisionBlocks = []; // List of collision
+  PlayerHitbox hitbox = PlayerHitbox(
+    offsetX: 10,
+    offsetY: 4,
+    width: 14,
+    height: 28,
+  ); // Player hitbox for collision detection
 
   @override
   FutureOr<void> onLoad() {
     _loadAllAnimations();
     debugMode = true; // Enable debug mode for the player component
+    add(
+      RectangleHitbox(
+        position: Vector2(hitbox.offsetX, hitbox.offsetY),
+        size: Vector2(hitbox.width, hitbox.height),
+      ),
+    ); // Add a hitbox for collision detection
     return super.onLoad();
   }
 
@@ -176,7 +190,9 @@ class Player extends SpriteAnimationGroupComponent
           if (velocity.x > 0) {
             velocity.x = 0; // Stop movement if colliding on the right
             position.x =
-                block.x - width; // Move player to the left of the block
+                block.x -
+                hitbox.offsetX -
+                hitbox.width; // Move player to the left of the block
             break; // Exit loop after collision
           }
           if (velocity.x < 0) {
@@ -184,7 +200,8 @@ class Player extends SpriteAnimationGroupComponent
             position.x =
                 block.x +
                 block.width +
-                width; // Move player to the right of the block
+                hitbox.width +
+                hitbox.offsetX; // Move player to the right of the block
             break; // Exit loop after collision
           }
         }
@@ -207,7 +224,10 @@ class Player extends SpriteAnimationGroupComponent
         if (checkCollision(this, block)) {
           if (velocity.y > 0) {
             velocity.y = 0; // Stop downward movement
-            position.y = block.y - height; // Move player above the platform
+            position.y =
+                block.y -
+                hitbox.height -
+                hitbox.offsetY; // Move player above the platform
             isOnGround = true; // Set player on ground flag
             break; // Exit loop after collision
           }
@@ -221,13 +241,19 @@ class Player extends SpriteAnimationGroupComponent
         if (checkCollision(this, block)) {
           if (velocity.y > 0) {
             velocity.y = 0;
-            position.y = block.y - height; // Move player above the block
+            position.y =
+                block.y -
+                hitbox.height -
+                hitbox.offsetY; // Move player above the block
             isOnGround = true; // Set player on ground flag
             break; // Exit loop after collision
           }
           if (velocity.y < 0) {
             velocity.y = 0; // Stop upward movement
-            position.y = block.y + block.height; // Move player below the block
+            position.y =
+                block.y +
+                block.height -
+                hitbox.offsetY; // Move player below the block
             break; // Exit loop after collision
           }
         }
