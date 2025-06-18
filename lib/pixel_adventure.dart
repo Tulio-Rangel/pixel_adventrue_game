@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:pixel_adventure_game/components/player.dart';
 import 'package:pixel_adventure_game/components/level.dart';
@@ -12,9 +13,11 @@ class PixelAdventure extends FlameGame
   @override
   Color backgroundColor() => const Color(0xFF211F30); // Set the background color of the game
   late final CameraComponent cam;
-  Player player = Player(character: 'Mask Dude');
+  Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
+  late HudButtonComponent jumpButton; // Button for jumping
   bool showJoystick = true; // Flag to control joystick visibility
+  bool showJumpButton = true; // Flag to control jump button visibility
 
   @override
   FutureOr<void> onLoad() async {
@@ -41,6 +44,8 @@ class PixelAdventure extends FlameGame
     if (showJoystick) {
       addJoystick(); // Add a joystick for player control
     }
+
+    if (showJumpButton) addJumpButton(); // Add a jump button for player control
 
     return super.onLoad();
   }
@@ -74,6 +79,27 @@ class PixelAdventure extends FlameGame
     ); // Create a joystick component with a directional joystick
 
     add(joystick); // Add the joystick to the game
+  }
+
+  void addJumpButton() {
+    jumpButton = HudButtonComponent(
+      button: SpriteComponent(
+        sprite: Sprite(
+          images.fromCache('HUD/JumpButton.png'), // Load the jump button sprite
+        ),
+      ),
+      margin: const EdgeInsets.only(
+        right: 20,
+        bottom: 32,
+      ), // Set the margin for the jump button
+      onPressed: () {
+        player.playerJump(
+          0.000000000000000000001,
+        ); // Call the player's jump method when the button is pressed
+      },
+    ); // Create a button component for jumping
+
+    add(jumpButton); // Add the jump button to the game
   }
 
   void updateJoistick() {

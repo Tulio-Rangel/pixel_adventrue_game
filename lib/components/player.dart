@@ -140,7 +140,7 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _updatePlayerMovement(double dt) {
-    if (hasJumped && isOnGround) _playerJump(dt); // Handle player jumping
+    if (hasJumped && isOnGround) playerJump(dt); // Handle player jumping
 
     //* Con este bloque evitamos el salto en el aire, remover los comentarios si no queremos salto en el aire.
     // if (velocity.y > _gravity) {
@@ -153,7 +153,7 @@ class Player extends SpriteAnimationGroupComponent
         dt; // Update the player's position based on velocity and delta time
   }
 
-  void _playerJump(double dt) {
+  void playerJump(double dt) {
     velocity.y = -_jumpForce; // Apply jump force to the player
     position.y += velocity.y * dt; // Update the player's position
     isOnGround = false; // Set player on ground flag to false
