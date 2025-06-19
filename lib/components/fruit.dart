@@ -1,18 +1,32 @@
 import 'dart:async';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:pixel_adventure_game/components/cutom_hitbox.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
-class Fruit extends SpriteAnimationComponent with HasGameRef<PixelAdventure> {
+class Fruit extends SpriteAnimationComponent
+    with HasGameRef<PixelAdventure>, CollisionCallbacks {
   final String fruit;
   Fruit({this.fruit = 'Apple', position, size})
     : super(position: position, size: size);
 
+  bool _collected = false; // Flag to check if the fruit has been collected
   final double stepTime = 0.05; // Time between frames in seconds
-
+  final hitbox = CustomHitbox(offsetX: 10, offsetY: 10, width: 12, height: 12);
   @override
   FutureOr<void> onLoad() {
+    debugMode = false;
     priority = -1; // Set the priority for rendering
+
+    add(
+      RectangleHitbox(
+        position: Vector2(hitbox.offsetX, hitbox.offsetY),
+        size: Vector2(hitbox.width, hitbox.height),
+        collisionType: CollisionType.passive, // Set collision type to passive
+      ),
+    ); // Add a hitbox for collision detection
+
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache('Items/Fruits/$fruit.png'),
       SpriteAnimationData.sequenced(
@@ -22,5 +36,24 @@ class Fruit extends SpriteAnimationComponent with HasGameRef<PixelAdventure> {
       ),
     );
     return super.onLoad();
+  }
+
+  void collidedWithPlayer() {
+    if (!_collected) {
+      animation = SpriteAnimation.fromFrameData(
+        game.images.fromCache('Items/Fruits/Collected.png'),
+        SpriteAnimationData.sequenced(
+          amount: 6, // Number of frames in the animation
+          stepTime: stepTime, // Time between frames
+          textureSize: Vector2.all(32), // Size of each frame in pixels
+          loop: false,
+        ),
+      );
+      _collected = true; // Mark the fruit as collected
+    }
+    Future.delayed(
+      const Duration(milliseconds: 400),
+      () => removeFromParent(), // Remove the fruit after a delay
+    );
   }
 }
