@@ -52,7 +52,8 @@ class Level extends World with HasGameRef<PixelAdventure> {
                 backgroundColor ?? 'Gray', // Default to 'Gray' if not specified
             position: Vector2(
               x * tileSize,
-              y * tileSize - tileSize / 2,
+              y * tileSize -
+                  tileSize / 2, // Adjust y position to align with the camera
             ), // Position of the tile
           );
 

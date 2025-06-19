@@ -84,13 +84,12 @@ class PixelAdventure extends FlameGame
   void addJumpButton() {
     jumpButton = HudButtonComponent(
       button: SpriteComponent(
-        priority: 1000000,
         sprite: Sprite(
           images.fromCache('HUD/JumpButton.png'), // Load the jump button sprite
         ),
       ),
       margin: const EdgeInsets.only(
-        right: 20,
+        right: 8,
         bottom: 32,
       ), // Set the margin for the jump button
       onPressed: () {
