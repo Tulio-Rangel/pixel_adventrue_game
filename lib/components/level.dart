@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:pixel_adventure_game/components/background_tile.dart';
 import 'package:pixel_adventure_game/components/collision_block.dart';
 import 'package:pixel_adventure_game/components/player.dart';
+import 'package:pixel_adventure_game/pixel_adventure.dart';
 
-class Level extends World {
+class Level extends World with HasGameRef<PixelAdventure> {
   final String levelName;
   final Player player;
   Level({required this.levelName, required this.player});
@@ -29,7 +31,36 @@ class Level extends World {
     return super.onLoad();
   }
 
-  void _scrollingBackground() {}
+  void _scrollingBackground() {
+    final backgroundLayer = level.tileMap.getLayer('Background');
+
+    const tileSize =
+        64; // Size of each background tile in pixels // Tamano de la imagen
+
+    final numTilesY = (game.size.y / tileSize).floor();
+    final numTilesX = (game.size.x / tileSize).floor();
+
+    if (backgroundLayer != null) {
+      final backgroundColor = backgroundLayer.properties.getValue(
+        'BackgroundColor',
+      );
+
+      for (double y = 0; y < numTilesY; y++) {
+        for (double x = 0; x < numTilesX; x++) {
+          final backgroundTile = BackgroundTile(
+            color:
+                backgroundColor ?? 'Gray', // Default to 'Gray' if not specified
+            position: Vector2(
+              x * tileSize,
+              y * tileSize - tileSize / 2,
+            ), // Position of the tile
+          );
+
+          add(backgroundTile); // Add the background tile to the world
+        }
+      }
+    }
+  }
 
   void _spawningObjects() {
     final spawnPointsLayer = level.tileMap.getLayer<ObjectGroup>(

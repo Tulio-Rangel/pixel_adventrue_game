@@ -26,7 +26,7 @@ class PixelAdventure extends FlameGame
 
     final world = Level(
       player: player,
-      levelName: 'Level-04',
+      levelName: 'Level-05',
     ); // Create an instance of Level
 
     cam = CameraComponent.withFixedResolution(
@@ -37,7 +37,7 @@ class PixelAdventure extends FlameGame
     cam.viewfinder.anchor =
         Anchor.topLeft; // Set the camera's anchor to the top-left corner
 
-    // cam.viewfinder.zoom = 0.5; // Set the camera's zoom level
+    // cam.viewfinder.zoom = 0.25; // Set the camera's zoom level
 
     addAll([cam, world]); // Add the camera and world to the game
 
@@ -84,6 +84,7 @@ class PixelAdventure extends FlameGame
   void addJumpButton() {
     jumpButton = HudButtonComponent(
       button: SpriteComponent(
+        priority: 1000000,
         sprite: Sprite(
           images.fromCache('HUD/JumpButton.png'), // Load the jump button sprite
         ),
