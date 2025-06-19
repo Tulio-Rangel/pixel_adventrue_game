@@ -16,8 +16,8 @@
             "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 311.6666666666667,
-                "y": 184
+                "x": 311.33333333333326,
+                "y": 183.66666666666666
             }
         },
         "Level-02.tmx": {
@@ -33,22 +33,34 @@
                 2
             ],
             "scale": 1.7401442307692305,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 311.75576737118394,
-                "y": 183.89280287332508
+                "x": 311.46843486669434,
+                "y": 183.60547036883548
             }
         },
         "Level-04.tmx": {
             "expandedObjectLayers": [
-                2,
-                3
+                3,
+                2
             ],
-            "scale": 1.7401442307692305,
+            "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 311.75576737118394,
-                "y": 183.89280287332508
+                "x": 297.33333333333326,
+                "y": 153.66666666666666
+            }
+        },
+        "Level-05.tmx": {
+            "expandedObjectLayers": [
+                3,
+                2
+            ],
+            "scale": 1.696640625,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 320.04420500069074,
+                "y": 184.18750287792972
             }
         },
         "Level-2.tmx": {
@@ -69,7 +81,7 @@
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
-    "map.width": 39,
+    "map.width": 40,
     "openFiles": [
         "Pixel Adventure.tsx",
         "Level-01.tmx",
@@ -85,6 +97,7 @@
         "Level-02.tmx",
         "Level-2.tmx"
     ],
+    "resizeMap.removeObjects": true,
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
         "height": 16,
