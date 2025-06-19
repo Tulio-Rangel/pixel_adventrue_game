@@ -22,6 +22,16 @@ class Level extends World {
 
     add(level); // Add the loaded Tiled component to the world
 
+    _scrollingBackground(); // Initialize the scrolling background
+    _spawningObjects(); // Spawn objects in the level
+    _addCollisions(); // Add collision blocks to the level
+
+    return super.onLoad();
+  }
+
+  void _scrollingBackground() {}
+
+  void _spawningObjects() {
     final spawnPointsLayer = level.tileMap.getLayer<ObjectGroup>(
       'Spawnpoints',
     ); // Get the spawn points layer from the Tiled map
@@ -40,7 +50,9 @@ class Level extends World {
         }
       }
     }
+  }
 
+  void _addCollisions() {
     final collisionsLayer = level.tileMap.getLayer<ObjectGroup>(
       'Collisions',
     ); // Get the collisions layer from the Tiled map
@@ -69,6 +81,5 @@ class Level extends World {
     }
     player.collisionBlocks =
         collisionBlocks; // Assign the collision blocks to the player
-    return super.onLoad();
   }
 }
