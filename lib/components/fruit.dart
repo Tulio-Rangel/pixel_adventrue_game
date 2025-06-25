@@ -11,7 +11,6 @@ class Fruit extends SpriteAnimationComponent
   Fruit({this.fruit = 'Apple', position, size})
     : super(position: position, size: size);
 
-  bool _collected = false; // Flag to check if the fruit has been collected
   final double stepTime = 0.05; // Time between frames in seconds
   final hitbox = CustomHitbox(offsetX: 10, offsetY: 10, width: 12, height: 12);
   @override
@@ -38,22 +37,18 @@ class Fruit extends SpriteAnimationComponent
     return super.onLoad();
   }
 
-  void collidedWithPlayer() {
-    if (!_collected) {
-      animation = SpriteAnimation.fromFrameData(
-        game.images.fromCache('Items/Fruits/Collected.png'),
-        SpriteAnimationData.sequenced(
-          amount: 6, // Number of frames in the animation
-          stepTime: stepTime, // Time between frames
-          textureSize: Vector2.all(32), // Size of each frame in pixels
-          loop: false,
-        ),
-      );
-      _collected = true; // Mark the fruit as collected
-    }
-    Future.delayed(
-      const Duration(milliseconds: 400),
-      () => removeFromParent(), // Remove the fruit after a delay
+  void collidedWithPlayer() async {
+    animation = SpriteAnimation.fromFrameData(
+      game.images.fromCache('Items/Fruits/Collected.png'),
+      SpriteAnimationData.sequenced(
+        amount: 6, // Number of frames in the animation
+        stepTime: stepTime, // Time between frames
+        textureSize: Vector2.all(32), // Size of each frame in pixels
+        loop: false,
+      ),
     );
+
+    await animationTicker?.completed; // Stop the current animation ticker
+    removeFromParent(); // Remove the fruit from the game
   }
 }
