@@ -41,7 +41,7 @@ class Player extends SpriteAnimationGroupComponent
   disappearingAnimation; // Animation for disappearing state
 
   final double _gravity = 9.8;
-  final double _jumpForce = 460; // Force applied when jumping
+  final double _jumpForce = 260; // Force applied when jumping
   final double _terminalVelocity = 300; // Maximum falling speed
 
   double horizontalMovement = 0; // Horizontal movement input
