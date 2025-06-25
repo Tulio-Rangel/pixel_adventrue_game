@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
+import 'package:pixel_adventure_game/components/checkpoint.dart';
 import 'package:pixel_adventure_game/components/collision_block.dart';
 import 'package:pixel_adventure_game/components/cutom_hitbox.dart';
 import 'package:pixel_adventure_game/components/fruit.dart';
@@ -17,6 +18,7 @@ enum PlayerState {
   falling, // Player is falling
   hit, // Player is hit
   appearing, // Player is appearing
+  disappearing, // Player is disappearing
 }
 
 class Player extends SpriteAnimationGroupComponent
@@ -35,6 +37,8 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation hitAnimation; // Animation for falling state
   late final SpriteAnimation
   appearingAnimation; // Animation for appearing state
+  late final SpriteAnimation
+  disappearingAnimation; // Animation for disappearing state
 
   final double _gravity = 9.8;
   final double _jumpForce = 460; // Force applied when jumping
@@ -47,6 +51,8 @@ class Player extends SpriteAnimationGroupComponent
   bool isOnGround = false; // Flag to check if the player is on the ground
   bool hasJumped = false; // Flag to check if the player has jumped
   bool gotHit = false; // Flag to check if the player got hit
+  bool checkedCheckpoint =
+      false; // Flag to check if the player reached a checkpoint
   List<CollisionBlock> collisionBlocks = []; // List of collision
   CustomHitbox hitbox = CustomHitbox(
     offsetX: 10,
@@ -76,7 +82,7 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   void update(double dt) {
-    if (!gotHit) {
+    if (!gotHit && !checkedCheckpoint) {
       _updatePlayerState();
       _updatePlayerMovement(dt);
       _checkHorizontalCollisions();
@@ -114,10 +120,15 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    if (other is Fruit) {
-      other.collidedWithPlayer(); // Handle collision with fruit
+    if (!checkedCheckpoint) {
+      if (other is Fruit) {
+        other.collidedWithPlayer(); // Handle collision with fruit
+      }
+      if (other is Saw) _respawn(); // Respawn player if colliding with a saw
+      if (other is Checkpoint && !checkedCheckpoint) {
+        _reachedCheckpoint(); // Handle checkpoint collision
+      }
     }
-    if (other is Saw) _respawn(); // Respawn player if colliding with a saw
 
     super.onCollision(intersectionPoints, other);
   }
@@ -147,6 +158,8 @@ class Player extends SpriteAnimationGroupComponent
 
     appearingAnimation = _specialSpriteAnimation('Appearing', 7);
 
+    disappearingAnimation = _specialSpriteAnimation('Desappearing', 7);
+
     // Define a map of animations for different player states
     animations = {
       PlayerState.idle:
@@ -159,6 +172,8 @@ class Player extends SpriteAnimationGroupComponent
           fallingAnimation, // Map the falling state to the falling animation
       PlayerState.hit: hitAnimation, // Map the hit state to the hit animation
       PlayerState.appearing: appearingAnimation, // Map the appearing state
+      PlayerState.disappearing:
+          disappearingAnimation, // Map the disappearing state
     };
 
     current = PlayerState.idle; // Set the current animation
@@ -332,6 +347,28 @@ class Player extends SpriteAnimationGroupComponent
           canMoveDuration,
           () => gotHit = false,
         ); // Reset the hit flag after appearing
+      });
+    });
+  }
+
+  void _reachedCheckpoint() {
+    checkedCheckpoint = true; // Set the checkpoint flag to true
+    if (scale.x > 0) {
+      position = position - Vector2.all(32); // Move player back if facing right
+    } else {
+      position = position + Vector2(32, -32); // Move player back if facing left
+    }
+
+    current = PlayerState.disappearing; // Set the player state to disappearing
+
+    const reachedCheckpointDuration = Duration(milliseconds: 50 * 7);
+    Future.delayed(reachedCheckpointDuration, () {
+      checkedCheckpoint = false; // Reset the checkpoint flag
+      position = Vector2.all(-640);
+
+      const waitToChangeDuration = Duration(seconds: 3);
+      Future.delayed(waitToChangeDuration, () {
+        // TODO: logic to change level
       });
     });
   }
