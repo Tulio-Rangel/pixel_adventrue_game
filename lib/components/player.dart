@@ -161,10 +161,8 @@ class Player extends SpriteAnimationGroupComponent
       1,
     ); // Load the falling animation (single frame)
 
-    hitAnimation = _spriteAnimation(
-      'Hit',
-      7,
-    ); // Load the hit animation (single frame)
+    hitAnimation = _spriteAnimation('Hit', 7)
+      ..loop = false; // Load the hit animation (no loop)
 
     appearingAnimation = _specialSpriteAnimation('Appearing', 7);
 
@@ -208,7 +206,7 @@ class Player extends SpriteAnimationGroupComponent
         amount: amount, // Number of frames in the animation
         stepTime: stepTime, // Time per frame
         textureSize: Vector2.all(96), // Size of each frame in pixels
-        loop: true, // Loop the animation
+        loop: false, // Loop the animation
       ),
     );
   }
@@ -335,30 +333,30 @@ class Player extends SpriteAnimationGroupComponent
     }
   }
 
-  void _respawn() {
-    const hitDuration = Duration(
-      milliseconds: 50 * 7,
-    ); // Duration of hit animation // 50 miliseconds per frame * 7 frames
-    const appearingDuration = Duration(
-      milliseconds: 50 * 7,
-    ); // Duration of appearing animation // 50 miliseconds per frame * 7 frames
-    const canMoveDuration = Duration(microseconds: 400);
+  void _respawn() async {
+    const canMoveDuration = Duration(milliseconds: 400);
     gotHit = true; // Set the hit flag to true
     current = PlayerState.hit; // Set the player state to hit
-    Future.delayed(hitDuration, () {
-      scale.x = 1; // Reset the scale to normal after hit
-      position = startingPosition - Vector2.all(32);
-      current = PlayerState.appearing; // Set the player state to appearing
-      Future.delayed(appearingDuration, () {
-        velocity = Vector2.zero(); // Reset the velocity after appearing
-        position = startingPosition; // Reset the position to the starting point
-        _updatePlayerState(); // Update the player state after appearing
-        Future.delayed(
-          canMoveDuration,
-          () => gotHit = false,
-        ); // Reset the hit flag after appearing
-      });
-    });
+
+    await animationTicker
+        ?.completed; // Wait for the current animation to complete
+    animationTicker?.reset(); // Reset the animation ticker
+
+    scale.x = 1; // Reset the scale to normal after hit
+    position = startingPosition - Vector2.all(32);
+    current = PlayerState.appearing; // Set the player state to appearing
+
+    await animationTicker
+        ?.completed; // Wait for the appearing animation to complete
+    animationTicker?.reset(); // Reset the animation ticker
+
+    velocity = Vector2.zero(); // Reset the velocity after appearing
+    position = startingPosition; // Reset the position to the starting point
+    _updatePlayerState(); // Update the player state after appearing
+    Future.delayed(
+      canMoveDuration,
+      () => gotHit = false,
+    ); // Reset the hit flag after appearing
   }
 
   void _reachedCheckpoint() {
