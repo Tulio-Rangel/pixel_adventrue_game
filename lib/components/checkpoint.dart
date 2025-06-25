@@ -9,8 +9,6 @@ class Checkpoint extends SpriteAnimationComponent
     with HasGameRef<PixelAdventure>, CollisionCallbacks {
   Checkpoint({position, size}) : super(position: position, size: size);
 
-  bool checkedCheckpoint = false; // To track if the checkpoint has been reached
-
   @override
   FutureOr<void> onLoad() {
     debugMode = false;
@@ -36,13 +34,15 @@ class Checkpoint extends SpriteAnimationComponent
   }
 
   @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    if (other is Player && !checkedCheckpoint) _reachedCheckpoint();
-    super.onCollision(intersectionPoints, other);
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    if (other is Player) _reachedCheckpoint();
+    super.onCollisionStart(intersectionPoints, other);
   }
 
-  void _reachedCheckpoint() {
-    checkedCheckpoint = true;
+  void _reachedCheckpoint() async {
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache(
         'Items/Checkpoints/Checkpoint/Checkpoint (Flag Out) (64x64).png',
@@ -55,20 +55,17 @@ class Checkpoint extends SpriteAnimationComponent
       ),
     );
 
-    const flagDuration = Duration(
-      milliseconds: 50 * 26,
-    ); // Duration for the flag animation for 26 frames
-    Future.delayed(flagDuration, () {
-      animation = SpriteAnimation.fromFrameData(
-        game.images.fromCache(
-          'Items/Checkpoints/Checkpoint/Checkpoint (Flag Idle)(64x64).png',
-        ),
-        SpriteAnimationData.sequenced(
-          amount: 10,
-          stepTime: 0.05,
-          textureSize: Vector2.all(64),
-        ),
-      );
-    });
+    await animationTicker?.completed; // Wait for the animation to complete
+
+    animation = SpriteAnimation.fromFrameData(
+      game.images.fromCache(
+        'Items/Checkpoints/Checkpoint/Checkpoint (Flag Idle)(64x64).png',
+      ),
+      SpriteAnimationData.sequenced(
+        amount: 10,
+        stepTime: 0.05,
+        textureSize: Vector2.all(64),
+      ),
+    );
   }
 }
