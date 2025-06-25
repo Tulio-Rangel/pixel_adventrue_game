@@ -26,7 +26,7 @@ class PixelAdventure extends FlameGame
 
     final world = Level(
       player: player,
-      levelName: 'Level-05',
+      levelName: 'Level-06',
     ); // Create an instance of Level
 
     cam = CameraComponent.withFixedResolution(
