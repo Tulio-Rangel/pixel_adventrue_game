@@ -65,6 +65,7 @@ class Level extends World with HasGameRef<PixelAdventure> {
               spawnPoint.x,
               spawnPoint.y,
             ); // Set the player's position
+            player.scale.x = 1; // Platyer look to right
             add(player); // Add the player character to the world
             break;
           case 'Fruit':
