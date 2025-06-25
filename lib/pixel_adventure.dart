@@ -12,34 +12,21 @@ class PixelAdventure extends FlameGame
     with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
   @override
   Color backgroundColor() => const Color(0xFF211F30); // Set the background color of the game
-  late final CameraComponent cam;
+  late CameraComponent cam;
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
   late HudButtonComponent jumpButton; // Button for jumping
   bool showJoystick = true; // Flag to control joystick visibility
   bool showJumpButton = true; // Flag to control jump button visibility
+  List<String> levelNames = ['Level-06', 'Level-06']; // List of level names
+  int currentLevelIndex = 0; // Index of the current level
 
   @override
   FutureOr<void> onLoad() async {
     await images
         .loadAllImages(); // Load all images used in the game (into cache)
 
-    final world = Level(
-      player: player,
-      levelName: 'Level-06',
-    ); // Create an instance of Level
-
-    cam = CameraComponent.withFixedResolution(
-      world: world, // Use the world from the game
-      width: 640,
-      height: 360,
-    ); // Create a camera with a fixed resolution
-    cam.viewfinder.anchor =
-        Anchor.topLeft; // Set the camera's anchor to the top-left corner
-
-    // cam.viewfinder.zoom = 0.25; // Set the camera's zoom level
-
-    addAll([cam, world]); // Add the camera and world to the game
+    _loadLevel(); // Load the level
 
     if (showJoystick) {
       addJoystick(); // Add a joystick for player control
@@ -118,5 +105,37 @@ class PixelAdventure extends FlameGame
         player.horizontalMovement = 0; // Stop player movement
         break;
     }
+  }
+
+  void loadNextLevel() {
+    if (currentLevelIndex < levelNames.length - 1) {
+      currentLevelIndex++; // Increment the level index
+      _loadLevel(); // Load the next level
+    } else {
+      print(
+        'No more levels to load',
+      ); // Print a message if no more levels are available
+    }
+  }
+
+  void _loadLevel() {
+    Future.delayed(const Duration(seconds: 1), () {
+      Level world = Level(
+        player: player,
+        levelName: levelNames[currentLevelIndex], // Get the current level name
+      ); // Create an instance of Level
+
+      cam = CameraComponent.withFixedResolution(
+        world: world, // Use the world from the game
+        width: 640,
+        height: 360,
+      ); // Create a camera with a fixed resolution
+      cam.viewfinder.anchor =
+          Anchor.topLeft; // Set the camera's anchor to the top-left corner
+
+      // cam.viewfinder.zoom = 0.25; // Set the camera's zoom level
+
+      addAll([cam, world]); // Add the camera and world to the game
+    });
   }
 }
