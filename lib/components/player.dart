@@ -15,6 +15,8 @@ enum PlayerState {
   running, // Player is running
   jumping, // Player is jumping
   falling, // Player is falling
+  hit, // Player is hit
+  appearing, // Player is appearing
 }
 
 class Player extends SpriteAnimationGroupComponent
@@ -30,6 +32,9 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation runningAnimation; // Animation for running state
   late final SpriteAnimation jumpingAnimation; // Animation for jumping state
   late final SpriteAnimation fallingAnimation; // Animation for falling state
+  late final SpriteAnimation hitAnimation; // Animation for falling state
+  late final SpriteAnimation
+  appearingAnimation; // Animation for appearing state
 
   final double _gravity = 9.8;
   final double _jumpForce = 460; // Force applied when jumping
@@ -41,6 +46,7 @@ class Player extends SpriteAnimationGroupComponent
   Vector2 velocity = Vector2.zero(); // Current velocity of the player
   bool isOnGround = false; // Flag to check if the player is on the ground
   bool hasJumped = false; // Flag to check if the player has jumped
+  bool gotHit = false; // Flag to check if the player got hit
   List<CollisionBlock> collisionBlocks = []; // List of collision
   CustomHitbox hitbox = CustomHitbox(
     offsetX: 10,
@@ -70,11 +76,14 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   void update(double dt) {
-    _updatePlayerState();
-    _updatePlayerMovement(dt);
-    _checkHorizontalCollisions();
-    _applyGravity(dt); // Apply gravity to the player
-    _checkVerticalCollisions(); // Check for vertical collisions
+    if (!gotHit) {
+      _updatePlayerState();
+      _updatePlayerMovement(dt);
+      _checkHorizontalCollisions();
+      _applyGravity(dt); // Apply gravity to the player
+      _checkVerticalCollisions(); // Check for vertical collisions
+    }
+
     super.update(dt);
   }
 
@@ -131,6 +140,13 @@ class Player extends SpriteAnimationGroupComponent
       1,
     ); // Load the falling animation (single frame)
 
+    hitAnimation = _spriteAnimation(
+      'Hit',
+      7,
+    ); // Load the hit animation (single frame)
+
+    appearingAnimation = _specialSpriteAnimation('Appearing', 7);
+
     // Define a map of animations for different player states
     animations = {
       PlayerState.idle:
@@ -141,6 +157,8 @@ class Player extends SpriteAnimationGroupComponent
           jumpingAnimation, // Map the jumping state to the jumping animation
       PlayerState.falling:
           fallingAnimation, // Map the falling state to the falling animation
+      PlayerState.hit: hitAnimation, // Map the hit state to the hit animation
+      PlayerState.appearing: appearingAnimation, // Map the appearing state
     };
 
     current = PlayerState.idle; // Set the current animation
@@ -153,6 +171,18 @@ class Player extends SpriteAnimationGroupComponent
         amount: amount, // Number of frames in the animation
         stepTime: stepTime, // Time per frame
         textureSize: Vector2.all(32), // Size of each frame in pixels
+        loop: true, // Loop the animation
+      ),
+    );
+  }
+
+  SpriteAnimation _specialSpriteAnimation(String state, int amount) {
+    return SpriteAnimation.fromFrameData(
+      game.images.fromCache('Main Characters/$state (96x96).png'),
+      SpriteAnimationData.sequenced(
+        amount: amount, // Number of frames in the animation
+        stepTime: stepTime, // Time per frame
+        textureSize: Vector2.all(96), // Size of each frame in pixels
         loop: true, // Loop the animation
       ),
     );
@@ -281,6 +311,28 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _respawn() {
-    position = startingPosition;
+    const hitDuration = Duration(
+      milliseconds: 50 * 7,
+    ); // Duration of hit animation // 50 miliseconds per frame * 7 frames
+    const appearingDuration = Duration(
+      milliseconds: 50 * 7,
+    ); // Duration of appearing animation // 50 miliseconds per frame * 7 frames
+    const canMoveDuration = Duration(microseconds: 400);
+    gotHit = true; // Set the hit flag to true
+    current = PlayerState.hit; // Set the player state to hit
+    Future.delayed(hitDuration, () {
+      scale.x = 1; // Reset the scale to normal after hit
+      position = startingPosition - Vector2.all(32);
+      current = PlayerState.appearing; // Set the player state to appearing
+      Future.delayed(appearingDuration, () {
+        velocity = Vector2.zero(); // Reset the velocity after appearing
+        position = startingPosition; // Reset the position to the starting point
+        _updatePlayerState(); // Update the player state after appearing
+        Future.delayed(
+          canMoveDuration,
+          () => gotHit = false,
+        ); // Reset the hit flag after appearing
+      });
+    });
   }
 }
