@@ -60,6 +60,8 @@ class Player extends SpriteAnimationGroupComponent
     width: 14,
     height: 28,
   ); // Player hitbox for collision detection
+  double fixedDeltaTime = 1 / 60; // Fixed delta time for physics calculations
+  double accumulatedTime = 0; // Accumulated time for fixed updates
 
   @override
   FutureOr<void> onLoad() {
@@ -82,12 +84,18 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   void update(double dt) {
-    if (!gotHit && !checkedCheckpoint) {
-      _updatePlayerState();
-      _updatePlayerMovement(dt);
-      _checkHorizontalCollisions();
-      _applyGravity(dt); // Apply gravity to the player
-      _checkVerticalCollisions(); // Check for vertical collisions
+    accumulatedTime += dt; // Accumulate time for fixed updates
+
+    while (accumulatedTime >= fixedDeltaTime) {
+      if (!gotHit && !checkedCheckpoint) {
+        _updatePlayerState();
+        _updatePlayerMovement(fixedDeltaTime);
+        _checkHorizontalCollisions();
+        _applyGravity(fixedDeltaTime); // Apply gravity to the player
+        _checkVerticalCollisions(); // Check for vertical collisions
+      }
+      accumulatedTime -=
+          fixedDeltaTime; // Reduce accumulated time by fixed delta time
     }
 
     super.update(dt);
