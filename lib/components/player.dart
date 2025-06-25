@@ -127,7 +127,10 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
     if (!checkedCheckpoint) {
       if (other is Fruit) {
         other.collidedWithPlayer(); // Handle collision with fruit
@@ -137,8 +140,7 @@ class Player extends SpriteAnimationGroupComponent
         _reachedCheckpoint(); // Handle checkpoint collision
       }
     }
-
-    super.onCollision(intersectionPoints, other);
+    super.onCollisionStart(intersectionPoints, other);
   }
 
   void _loadAllAnimations() {
