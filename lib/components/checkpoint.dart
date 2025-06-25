@@ -13,7 +13,7 @@ class Checkpoint extends SpriteAnimationComponent
 
   @override
   FutureOr<void> onLoad() {
-    debugMode = true;
+    debugMode = false;
     add(
       RectangleHitbox(
         position: Vector2(18, 18),
@@ -54,5 +54,21 @@ class Checkpoint extends SpriteAnimationComponent
         loop: false,
       ),
     );
+
+    const flagDuration = Duration(
+      milliseconds: 50 * 26,
+    ); // Duration for the flag animation for 26 frames
+    Future.delayed(flagDuration, () {
+      animation = SpriteAnimation.fromFrameData(
+        game.images.fromCache(
+          'Items/Checkpoints/Checkpoint/Checkpoint (Flag Idle)(64x64).png',
+        ),
+        SpriteAnimationData.sequenced(
+          amount: 10,
+          stepTime: 0.05,
+          textureSize: Vector2.all(64),
+        ),
+      );
+    });
   }
 }
