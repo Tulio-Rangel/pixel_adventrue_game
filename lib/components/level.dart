@@ -37,32 +37,18 @@ class Level extends World with HasGameRef<PixelAdventure> {
   void _scrollingBackground() {
     final backgroundLayer = level.tileMap.getLayer('Background');
 
-    const tileSize =
-        64; // Size of each background tile in pixels // Tamano de la imagen
-
-    final numTilesY = (game.size.y / tileSize).floor();
-    final numTilesX = (game.size.x / tileSize).floor();
-
     if (backgroundLayer != null) {
       final backgroundColor = backgroundLayer.properties.getValue(
         'BackgroundColor',
       );
-
-      for (double y = 0; y < game.size.y / numTilesY; y++) {
-        for (double x = 0; x < numTilesX; x++) {
-          final backgroundTile = BackgroundTile(
-            color:
-                backgroundColor ?? 'Gray', // Default to 'Gray' if not specified
-            position: Vector2(
-              x * tileSize,
-              y * tileSize -
-                  tileSize / 2, // Adjust y position to align with the camera
-            ), // Position of the tile
-          );
-
-          add(backgroundTile); // Add the background tile to the world
-        }
-      }
+      final backgroundTile = BackgroundTile(
+        color: backgroundColor ?? 'Gray', // Default to 'Gray' if not specified
+        position: Vector2(
+          0,
+          0, // Set the position of the background tile
+        ), // Position of the tile
+      );
+      add(backgroundTile); // Add the background tile to the world
     }
   }
 
