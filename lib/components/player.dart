@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:pixel_adventure_game/components/collision_block.dart';
 import 'package:pixel_adventure_game/components/cutom_hitbox.dart';
 import 'package:pixel_adventure_game/components/fruit.dart';
+import 'package:pixel_adventure_game/components/saw.dart';
 import 'package:pixel_adventure_game/components/utils.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
@@ -36,6 +37,7 @@ class Player extends SpriteAnimationGroupComponent
 
   double horizontalMovement = 0; // Horizontal movement input
   double moveSpeed = 100; // Movement speed of the player in pixels per second
+  Vector2 startingPosition = Vector2.zero(); // Starting position of the player
   Vector2 velocity = Vector2.zero(); // Current velocity of the player
   bool isOnGround = false; // Flag to check if the player is on the ground
   bool hasJumped = false; // Flag to check if the player has jumped
@@ -51,6 +53,12 @@ class Player extends SpriteAnimationGroupComponent
   FutureOr<void> onLoad() {
     _loadAllAnimations();
     debugMode = false; // Enable debug mode for the player component
+
+    startingPosition = Vector2(
+      position.x,
+      position.y,
+    ); // Store the starting position
+
     add(
       RectangleHitbox(
         position: Vector2(hitbox.offsetX, hitbox.offsetY),
@@ -100,6 +108,8 @@ class Player extends SpriteAnimationGroupComponent
     if (other is Fruit) {
       other.collidedWithPlayer(); // Handle collision with fruit
     }
+    if (other is Saw) _respawn(); // Respawn player if colliding with a saw
+
     super.onCollision(intersectionPoints, other);
   }
 
@@ -268,5 +278,9 @@ class Player extends SpriteAnimationGroupComponent
         }
       }
     }
+  }
+
+  void _respawn() {
+    position = startingPosition;
   }
 }
