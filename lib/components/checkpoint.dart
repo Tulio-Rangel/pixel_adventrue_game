@@ -6,8 +6,8 @@ import 'package:pixel_adventure_game/components/player.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
 class Checkpoint extends SpriteAnimationComponent
-    with HasGameRef<PixelAdventure>, CollisionCallbacks {
-  Checkpoint({position, size}) : super(position: position, size: size);
+    with HasGameReference<PixelAdventure>, CollisionCallbacks {
+  Checkpoint({super.position, super.size});
 
   @override
   FutureOr<void> onLoad() {

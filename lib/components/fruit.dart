@@ -7,10 +7,9 @@ import 'package:pixel_adventure_game/components/cutom_hitbox.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
 class Fruit extends SpriteAnimationComponent
-    with HasGameRef<PixelAdventure>, CollisionCallbacks {
+    with HasGameReference<PixelAdventure>, CollisionCallbacks {
   final String fruit;
-  Fruit({this.fruit = 'Apple', position, size})
-    : super(position: position, size: size);
+  Fruit({this.fruit = 'Apple', super.position, super.size});
 
   final double stepTime = 0.05; // Time between frames in seconds
   final hitbox = CustomHitbox(offsetX: 10, offsetY: 10, width: 12, height: 12);

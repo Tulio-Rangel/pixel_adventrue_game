@@ -4,7 +4,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
-class Saw extends SpriteAnimationComponent with HasGameRef<PixelAdventure> {
+class Saw extends SpriteAnimationComponent
+    with HasGameReference<PixelAdventure> {
   final bool isVertial; // Flag to check if the saw is vertical
   final double offNeg;
   final double offPos;
@@ -12,9 +13,9 @@ class Saw extends SpriteAnimationComponent with HasGameRef<PixelAdventure> {
     this.isVertial = false,
     this.offNeg = 0,
     this.offPos = 0,
-    position,
-    size,
-  }) : super(position: position, size: size);
+    super.position,
+    super.size,
+  });
 
   static const double sawSpeed = 0.03; // Time between frames in seconds
   static const moveSpeed = 100;

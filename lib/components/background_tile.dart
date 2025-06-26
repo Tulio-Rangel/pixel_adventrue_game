@@ -8,7 +8,7 @@ import 'package:pixel_adventure_game/pixel_adventure.dart';
 class BackgroundTile extends ParallaxComponent<PixelAdventure> {
   final String color;
 
-  BackgroundTile({this.color = 'Gray', position}) : super(position: position);
+  BackgroundTile({this.color = 'Gray', super.position});
 
   final double scrollSpeed = 40; // Speed of the scrolling background
 
