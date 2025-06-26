@@ -16,7 +16,6 @@ class PixelAdventure extends FlameGame
   late CameraComponent cam;
   Player player = Player(character: 'Ninja Frog');
   late JoystickComponent joystick;
-  late HudButtonComponent jumpButton; // Button for jumping
   bool showControls = true; // Flag to control joystick visibility
   bool playSound = true; // Flag to control sound playback
   double soundVolume = 1.0; // Volume of the sound playback

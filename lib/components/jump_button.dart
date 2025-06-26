@@ -5,7 +5,7 @@ import 'package:flame/events.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
 class JumpButton extends SpriteComponent
-    with HasGameRef<PixelAdventure>, TapCallbacks {
+    with HasGameReference<PixelAdventure>, TapCallbacks {
   JumpButton();
 
   final marginBotton = 32.0; // Margin from the bottom edge of the screen
@@ -15,7 +15,7 @@ class JumpButton extends SpriteComponent
   @override
   FutureOr<void> onLoad() {
     sprite = Sprite(
-      gameRef.images.fromCache(
+      game.images.fromCache(
         'HUD/JumpButton.png',
       ), // Load the jump button sprite
     );
