@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
 import 'package:pixel_adventure_game/components/checkpoint.dart';
 import 'package:pixel_adventure_game/components/collision_block.dart';
@@ -226,6 +227,12 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void playerJump(double dt) {
+    if (game.playSound) {
+      FlameAudio.play(
+        'jump.wav',
+        volume: game.soundVolume,
+      ); // Play jump sound if enabled
+    }
     velocity.y = -_jumpForce; // Apply jump force to the player
     position.y += velocity.y * dt; // Update the player's position
     isOnGround = false; // Set player on ground flag to false
@@ -334,6 +341,13 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _respawn() async {
+    if (game.playSound) {
+      FlameAudio.play(
+        'hit.wav',
+        volume: game.soundVolume,
+      ); // Play hit sound if enabled
+    }
+
     const canMoveDuration = Duration(milliseconds: 400);
     gotHit = true; // Set the hit flag to true
     current = PlayerState.hit; // Set the player state to hit
@@ -359,8 +373,16 @@ class Player extends SpriteAnimationGroupComponent
     ); // Reset the hit flag after appearing
   }
 
-  void _reachedCheckpoint() {
+  void _reachedCheckpoint() async {
     checkedCheckpoint = true; // Set the checkpoint flag to true
+
+    if (game.playSound) {
+      FlameAudio.play(
+        'disappear.wav',
+        volume: game.soundVolume,
+      ); // Play checkpoint sound if enabled
+    }
+
     if (scale.x > 0) {
       position = position - Vector2.all(32); // Move player back if facing right
     } else {
@@ -368,16 +390,17 @@ class Player extends SpriteAnimationGroupComponent
     }
 
     current = PlayerState.disappearing; // Set the player state to disappearing
+    await animationTicker
+        ?.completed; // Wait for the disappearing animation to complete
+    animationTicker?.reset(); // Reset the animation ticker
 
-    const reachedCheckpointDuration = Duration(milliseconds: 50 * 7);
-    Future.delayed(reachedCheckpointDuration, () {
-      checkedCheckpoint = false; // Reset the checkpoint flag
-      position = Vector2.all(-640);
+    checkedCheckpoint = false; // Reset the checkpoint flag
+    position = Vector2.all(-640);
 
-      const waitToChangeDuration = Duration(seconds: 3);
-      Future.delayed(waitToChangeDuration, () {
-        game.loadNextLevel(); // Load the next level after reaching the checkpoint
-      });
-    });
+    const waitToChangeDuration = Duration(seconds: 3);
+    Future.delayed(
+      waitToChangeDuration,
+      () => game.loadNextLevel(),
+    ); // Load the next level after a delay
   }
 }

@@ -18,6 +18,8 @@ class PixelAdventure extends FlameGame
   late JoystickComponent joystick;
   late HudButtonComponent jumpButton; // Button for jumping
   bool showControls = true; // Flag to control joystick visibility
+  bool playSound = true; // Flag to control sound playback
+  double soundVolume = 1.0; // Volume of the sound playback
   List<String> levelNames = ['Level-06', 'Level-06']; // List of level names
   int currentLevelIndex = 0; // Index of the current level
 
@@ -87,13 +89,16 @@ class PixelAdventure extends FlameGame
   }
 
   void loadNextLevel() {
+    removeWhere(
+      (component) => component is Level,
+    ); // Remove the current level from the game
+
     if (currentLevelIndex < levelNames.length - 1) {
       currentLevelIndex++; // Increment the level index
       _loadLevel(); // Load the next level
     } else {
-      print(
-        'No more levels to load',
-      ); // Print a message if no more levels are available
+      currentLevelIndex = 0; // Reset to the first level if at the end
+      _loadLevel(); // Load the first level again
     }
   }
 
