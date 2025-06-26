@@ -5,12 +5,13 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:pixel_adventure_game/components/background_tile.dart';
 import 'package:pixel_adventure_game/components/checkpoint.dart';
 import 'package:pixel_adventure_game/components/collision_block.dart';
+import 'package:pixel_adventure_game/components/enemy.dart';
 import 'package:pixel_adventure_game/components/fruit.dart';
 import 'package:pixel_adventure_game/components/player.dart';
 import 'package:pixel_adventure_game/components/saw.dart';
 import 'package:pixel_adventure_game/pixel_adventure.dart';
 
-class Level extends World with HasGameRef<PixelAdventure> {
+class Level extends World with HasGameReference<PixelAdventure> {
   final String levelName;
   final Player player;
   Level({required this.levelName, required this.player});
@@ -106,6 +107,18 @@ class Level extends World with HasGameRef<PixelAdventure> {
               size: Vector2(spawnPoint.width, spawnPoint.height),
             );
             add(checkpoint); // Add the checkpoint to the world
+            break;
+          case 'Enemy':
+            final chicken = Enemy(
+              position: Vector2(
+                spawnPoint.x,
+                spawnPoint.y,
+              ), // Set the position of the enemy
+              size: Vector2(spawnPoint.width, spawnPoint.height),
+              offNeg: spawnPoint.properties.getValue('offNeg'),
+              offPos: spawnPoint.properties.getValue('offPos'),
+            );
+            add(chicken); // Add the enemy to the world
             break;
           default:
         }

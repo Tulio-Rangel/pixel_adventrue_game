@@ -3,6 +3,12 @@
         android:label="pixel_adventure_game"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data
+            android:name="flutter.embedding.android.enableVulkan"
+            android:value="false" />
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

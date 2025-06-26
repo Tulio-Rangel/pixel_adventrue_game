@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:pixel_adventure_game/components/checkpoint.dart';
 import 'package:pixel_adventure_game/components/collision_block.dart';
 import 'package:pixel_adventure_game/components/cutom_hitbox.dart';
+import 'package:pixel_adventure_game/components/enemy.dart';
 import 'package:pixel_adventure_game/components/fruit.dart';
 import 'package:pixel_adventure_game/components/saw.dart';
 import 'package:pixel_adventure_game/components/utils.dart';
@@ -23,10 +24,9 @@ enum PlayerState {
 }
 
 class Player extends SpriteAnimationGroupComponent
-    with HasGameRef<PixelAdventure>, KeyboardHandler, CollisionCallbacks {
+    with HasGameReference<PixelAdventure>, KeyboardHandler, CollisionCallbacks {
   String character;
-  Player({position, this.character = 'Ninja Frog'})
-    : super(position: position) {
+  Player({super.position, this.character = 'Ninja Frog'}) {
     // Initialize the player with a specific position and character
   }
 
@@ -137,6 +137,9 @@ class Player extends SpriteAnimationGroupComponent
         other.collidedWithPlayer(); // Handle collision with fruit
       }
       if (other is Saw) _respawn(); // Respawn player if colliding with a saw
+      if (other is Enemy) {
+        other.colliedeWithPlayer(); // Handle collision with enemy
+      }
       if (other is Checkpoint && !checkedCheckpoint) {
         _reachedCheckpoint(); // Handle checkpoint collision
       }
@@ -402,5 +405,9 @@ class Player extends SpriteAnimationGroupComponent
       waitToChangeDuration,
       () => game.loadNextLevel(),
     ); // Load the next level after a delay
+  }
+
+  void collidedWithEnemy() {
+    _respawn(); // Respawn the player if colliding with an enemy
   }
 }
