@@ -2,7 +2,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:pixel_adventure_game/pixel_adventure.dart';
+import 'package:pixel_adventure_game/game/pixel_adventure.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter is initialized before running the app

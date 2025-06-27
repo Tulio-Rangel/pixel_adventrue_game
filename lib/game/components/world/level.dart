@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:pixel_adventure_game/components/background_tile.dart';
-import 'package:pixel_adventure_game/components/checkpoint.dart';
-import 'package:pixel_adventure_game/components/collision_block.dart';
-import 'package:pixel_adventure_game/components/enemy.dart';
-import 'package:pixel_adventure_game/components/fruit.dart';
-import 'package:pixel_adventure_game/components/player.dart';
-import 'package:pixel_adventure_game/components/saw.dart';
-import 'package:pixel_adventure_game/pixel_adventure.dart';
+import 'package:pixel_adventure_game/game/components/world/background_tile.dart';
+import 'package:pixel_adventure_game/game/components/items/checkpoint.dart';
+import 'package:pixel_adventure_game/game/components/world/collision_block.dart';
+import 'package:pixel_adventure_game/game/components/actors/enemy.dart';
+import 'package:pixel_adventure_game/game/components/items/fruit.dart';
+import 'package:pixel_adventure_game/game/components/actors/player.dart';
+import 'package:pixel_adventure_game/game/components/items/saw.dart';
+import 'package:pixel_adventure_game/game/pixel_adventure.dart';
 
 class Level extends World with HasGameReference<PixelAdventure> {
   final String levelName;

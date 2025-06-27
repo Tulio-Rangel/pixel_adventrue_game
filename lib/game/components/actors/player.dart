@@ -4,14 +4,14 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
-import 'package:pixel_adventure_game/components/checkpoint.dart';
-import 'package:pixel_adventure_game/components/collision_block.dart';
-import 'package:pixel_adventure_game/components/cutom_hitbox.dart';
-import 'package:pixel_adventure_game/components/enemy.dart';
-import 'package:pixel_adventure_game/components/fruit.dart';
-import 'package:pixel_adventure_game/components/saw.dart';
-import 'package:pixel_adventure_game/components/utils.dart';
-import 'package:pixel_adventure_game/pixel_adventure.dart';
+import 'package:pixel_adventure_game/game/components/items/checkpoint.dart';
+import 'package:pixel_adventure_game/game/components/world/collision_block.dart';
+import 'package:pixel_adventure_game/game/utils/cutom_hitbox.dart';
+import 'package:pixel_adventure_game/game/components/actors/enemy.dart';
+import 'package:pixel_adventure_game/game/components/items/fruit.dart';
+import 'package:pixel_adventure_game/game/components/items/saw.dart';
+import 'package:pixel_adventure_game/game/utils/utils.dart';
+import 'package:pixel_adventure_game/game/pixel_adventure.dart';
 
 enum PlayerState {
   idle, // Player is idle

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/parallax.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pixel_adventure_game/pixel_adventure.dart';
+import 'package:pixel_adventure_game/game/pixel_adventure.dart';
 
 class BackgroundTile extends ParallaxComponent<PixelAdventure> {
   final String color;
