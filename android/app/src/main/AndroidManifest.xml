@@ -2,7 +2,7 @@
     <application
         android:label="pixel_adventure_game"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <meta-data
             android:name="flutter.embedding.android.enableVulkan"
