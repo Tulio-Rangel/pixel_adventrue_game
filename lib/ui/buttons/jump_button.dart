@@ -9,7 +9,7 @@ class JumpButton extends SpriteComponent
   JumpButton();
 
   final marginBotton = 32.0; // Margin from the bottom edge of the screen
-  final marginRight = 8.0; // Margin from the bottom edge of the screen
+  final marginRight = 16.0; // Margin from the bottom edge of the screen
   final buttonSize = 64.0; // Size of the jump button
 
   @override

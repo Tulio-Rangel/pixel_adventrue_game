@@ -15,7 +15,7 @@ class BackgroundTile extends ParallaxComponent<PixelAdventure> {
   @override
   FutureOr<void> onLoad() async {
     priority =
-        -10; // Set the rendering priority to ensure it renders behind other components
+        -1000000; // Set the rendering priority to ensure it renders behind other components
     size = Vector2.all(64); // Set the size of the tile
     // game viene de ParallaxComponent que extiende de HasGameReference, no de HasGameRef que esta deprecado
     parallax = await game.loadParallax(

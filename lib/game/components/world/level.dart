@@ -21,6 +21,7 @@ class Level extends World with HasGameReference<PixelAdventure> {
 
   @override
   FutureOr<void> onLoad() async {
+    priority = -10; // Set the rendering priority for the level
     level = await TiledComponent.load(
       '$levelName.tmx', // Path to the Tiled map file
       Vector2.all(16), // Tile size in pixels
