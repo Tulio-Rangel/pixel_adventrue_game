@@ -19,7 +19,12 @@ class PixelAdventure extends FlameGame
   bool showControls = true; // Flag to control joystick visibility
   bool playSound = true; // Flag to control sound playback
   double soundVolume = 1.0; // Volume of the sound playback
-  List<String> levelNames = ['Level-01', 'Level-06']; // List of level names
+  List<String> levelNames = [
+    'Level-01',
+    'Level-02',
+    'Level-03'
+        'Level-06',
+  ]; // List of level names
   int currentLevelIndex = 0; // Index of the current level
 
   @override

@@ -51,6 +51,7 @@ class Player extends SpriteAnimationGroupComponent
   Vector2 velocity = Vector2.zero(); // Current velocity of the player
   bool isOnGround = false; // Flag to check if the player is on the ground
   bool hasJumped = false; // Flag to check if the player has jumped
+  int jumpCount = 0;
   bool gotHit = false; // Flag to check if the player got hit
   bool checkedCheckpoint =
       false; // Flag to check if the player reached a checkpoint
@@ -216,7 +217,15 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _updatePlayerMovement(double dt) {
-    if (hasJumped && isOnGround) playerJump(dt); // Handle player jumping
+    if (hasJumped) {
+      if (isOnGround) {
+        playerJump(dt);
+        jumpCount++;
+      } else if (jumpCount < 2) {
+        playerJump(dt);
+        jumpCount++;
+      }
+    }
 
     //* Con este bloque evitamos el salto en el aire, remover los comentarios si no queremos salto en el aire.
     // if (velocity.y > _gravity) {
@@ -311,13 +320,9 @@ class Player extends SpriteAnimationGroupComponent
                 hitbox.height -
                 hitbox.offsetY; // Move player above the platform
             isOnGround = true; // Set player on ground flag
+            jumpCount = 0;
             break; // Exit loop after collision
           }
-          // if (velocity.y < 0) {
-          //   velocity.y = 0; // Stop upward movement
-          //   position.y = block.y + block.height; // Move player below the platform
-          //   break; // Exit loop after collision
-          // }
         }
       } else {
         if (checkCollision(this, block)) {
@@ -328,6 +333,7 @@ class Player extends SpriteAnimationGroupComponent
                 hitbox.height -
                 hitbox.offsetY; // Move player above the block
             isOnGround = true; // Set player on ground flag
+            jumpCount = 0;
             break; // Exit loop after collision
           }
           if (velocity.y < 0) {
